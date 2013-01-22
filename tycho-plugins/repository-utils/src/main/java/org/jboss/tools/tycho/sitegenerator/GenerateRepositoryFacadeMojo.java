@@ -247,6 +247,7 @@ public class GenerateRepositoryFacadeMojo extends AbstractTychoPackagingMojo {
 		new EclipseRepositoryProject().getDependencyWalker(project).traverseUpdateSite(site, new ArtifactDependencyVisitor() {
             @Override
             public boolean visitFeature(FeatureDescription feature) {
+		try {
                 FeatureRef featureRef = feature.getFeatureRef();
                 String id = featureRef.getId();
                 ReactorProject otherProject = feature.getMavenProject();
@@ -259,6 +260,9 @@ public class GenerateRepositoryFacadeMojo extends AbstractTychoPackagingMojo {
                 String url = UpdateSiteAssembler.FEATURES_DIR + id + "_" + version + ".jar";
                 ((SiteFeatureRef) featureRef).setUrl(url);
                 featureRef.setVersion(version);
+		} catch(Exception ex) {
+getLog().warn("gotcha" + ex.getMessage());
+		}
                 return false; // don't traverse included features
             }
         });
